@@ -1,83 +1,623 @@
-{
-  "version": 1,
-  "updated": "2026-01-20",
-  "categories": [
-    { "key": "core", "name": "Core / Class Staples", "note": "High-frequency teacher hits" },
-    { "key": "lab", "name": "Lab Chaos / Reaction Energy", "note": "Heat, fire, danger, reaction moments" },
-    { "key": "correct", "name": "Corrections / Reality Checks", "note": "Try again, close-but-nope, move on" },
-    { "key": "wins", "name": "Wins / Celebrations", "note": "When someone nails it" },
-    { "key": "irony", "name": "Chemistry Irony", "note": "Pressure, electricity, etc." }
-  ],
-  "clips": [
-    {
-      "id": "letitgo",
-      "cat": "core",
-      "icon": "❄️",
-      "title": "Let It Go",
-      "meta": "Idina Menzel — Let It Go",
-      "url": "",
-      "start": 59.30,
-      "end": 64.30
-    },
-    {
-      "id": "canttouch",
-      "cat": "core",
-      "icon": "⚛️",
-      "title": "U Can't Touch This",
-      "meta": "MC Hammer — U Can't Touch This",
-      "url": "",
-      "start": 141.33,
-      "end": 145.33
-    },
-    {
-      "id": "getitstarted",
-      "cat": "core",
-      "icon": "⚗️",
-      "title": "Let’s Get It Started",
-      "meta": "Black Eyed Peas — Let’s Get It Started",
-      "url": "",
-      "start": 58.50,
-      "end": 63.50
-    },
-    {
-      "id": "girlonfire",
-      "cat": "core",
-      "icon": "🔥",
-      "title": "Girl On Fire",
-      "meta": "Alicia Keys — Girl On Fire",
-      "url": "",
-      "start": 47.50,
-      "end": 52.50
-    },
-    {
-      "id": "lefreek",
-      "cat": "core",
-      "icon": "🧪",
-      "title": "Le Freak (Aww freak out)",
-      "meta": "CHIC — Le Freak",
-      "url": "",
-      "start": 0,
-      "end": 0
-    },
-    {
-      "id": "nevergonna",
-      "cat": "core",
-      "icon": "🧪",
-      "title": "Never Gonna Get It",
-      "meta": "En Vogue — Never Gonna Get It (My Lovin’)",
-      "url": "",
-      "start": 0,
-      "end": 0
-    },
-    {
-      "id": "cantalways",
-      "cat": "core",
-      "icon": "🧪",
-      "title": "You Can’t Always Get What You Want",
-      "meta": "The Rolling Stones — You Can’t Always Get What You Want",
-      "url": "",
-      "start": 0,
-      "end": 0
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chem Soundboard</title>
+  <style>
+    :root{
+      --bg:#0b0f14; --card:rgba(255,255,255,.06); --border:rgba(255,255,255,.12);
+      --text:#e9eef5; --muted:rgba(233,238,245,.82);
+      --gap:12px; --radius:16px;
     }
-  ]
-}
+    *{box-sizing:border-box}
+    body{ margin:0; padding:16px; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background:var(--bg); color:var(--text); }
+    header{ display:flex; flex-direction:column; gap:10px; margin-bottom:14px; }
+    h1{ margin:0; font-size:18px; }
+    .sub{ color:var(--muted); font-size:13px; line-height:1.35; }
+    .toolbar{ display:flex; gap:10px; flex-wrap:wrap; margin:10px 0 6px; }
+    button{
+      border:1px solid var(--border);
+      background:var(--card); color:var(--text);
+      padding:10px 12px; border-radius:12px;
+      font-weight:800; cursor:pointer;
+    }
+    button:active{ transform:scale(.99); }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px; border-radius:999px;
+      border:1px solid var(--border); background:rgba(255,255,255,.04);
+      color:var(--muted); font-size:12px;
+      margin-right:8px; margin-bottom:6px;
+    }
+    .layout{ display:flex; flex-direction:column; gap:16px; margin-top:10px; }
+    .section{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.03);
+      border-radius:18px;
+      padding:12px;
+    }
+    .sectionHead{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:10px; }
+    .sectionTitle{ font-size:14px; font-weight:900; margin:0; }
+    .sectionNote{ font-size:12px; color:var(--muted); }
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(5, minmax(150px, 1fr));
+      gap:var(--gap);
+    }
+    @media (max-width: 1100px){ .grid{ grid-template-columns: repeat(3, minmax(150px, 1fr)); } }
+    @media (max-width: 700px){ .grid{ grid-template-columns: repeat(2, minmax(150px, 1fr)); } }
+    .card{
+      border:1px solid var(--border);
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:12px;
+      display:flex; gap:10px; align-items:center;
+      user-select:none;
+      touch-action:manipulation;
+      min-height:66px;
+    }
+    .icon{
+      width:44px; height:44px; border-radius:14px;
+      background:rgba(255,255,255,.08);
+      display:grid; place-items:center;
+      flex:0 0 44px;
+      font-size:20px;
+    }
+    .txt{ min-width:0; }
+    .title{ font-weight:900; font-size:14px; line-height:1.15; }
+    .meta{ margin-top:4px; font-size:12px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:240px; }
+    .badge{
+      margin-left:auto;
+      font-size:11px;
+      padding:5px 7px; border-radius:10px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.22);
+      color:rgba(233,238,245,.9);
+      white-space:nowrap;
+    }
+    .armed{ border-color:rgba(120,200,255,.55); box-shadow:0 0 0 2px rgba(120,200,255,.12) inset; }
+    .looping{ border-color:rgba(255,221,87,.55); box-shadow:0 0 0 2px rgba(255,221,87,.12) inset; }
+
+    dialog{
+      border:1px solid var(--border);
+      border-radius:18px;
+      background:#0f1520;
+      color:var(--text);
+      padding:14px;
+      max-width:800px;
+      width:calc(100% - 24px);
+    }
+    dialog::backdrop{ background:rgba(0,0,0,.55); }
+    .formgrid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .formgrid > label{ display:flex; flex-direction:column; gap:6px; font-size:12px; color:var(--muted); }
+    input, select{
+      padding:10px 10px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      outline:none;
+    }
+    .row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .small{ font-size:12px; color:var(--muted); line-height:1.35; }
+    textarea{
+      width:100%;
+      min-height:160px;
+      padding:10px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:12px;
+    }
+    code{ background:rgba(255,255,255,.08); padding:2px 6px; border-radius:8px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>⚗️ Chem Class Soundboard</h1>
+    <div class="sub">
+      <span class="pill">2× tap = play</span>
+      <span class="pill">2nd tap + hold = play while held</span>
+      <span class="pill">3× rapid taps = loop</span>
+      <span class="pill">tap once while looping = stop</span>
+      <div style="margin-top:8px;">
+        <b>Chrome Mac + iPad:</b> Click <b>Unlock Audio</b> once per session. Then you’re good.
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <button id="unlockBtn">Unlock Audio</button>
+      <button id="reloadBtn">Reload Shared Clips</button>
+      <button id="addBtn">Add Button (+)</button>
+      <button id="stopBtn">Stop All</button>
+      <button id="copyBtn">Copy Updated JSON</button>
+    </div>
+
+    <div class="small" id="status"></div>
+  </header>
+
+  <div class="layout" id="layout"></div>
+
+  <!-- Add Button dialog -->
+  <dialog id="dlgAdd">
+    <h2 style="margin:0 0 8px;font-size:16px;">Add a new sound button</h2>
+    <div class="small" style="margin-bottom:10px;">
+      Add here, test locally, then click <b>Copy Updated JSON</b> and paste into your hosted <code>clips.json</code>.
+      Needs a <b>direct HTTPS audio file URL</b> (mp3/m4a/wav).
+    </div>
+
+    <div class="formgrid">
+      <label>Category
+        <select id="fCat"></select>
+      </label>
+      <label>Icon
+        <select id="fIcon">
+          <option value="⚗️">⚗️ Flask</option>
+          <option value="⚛️">⚛️ Atom</option>
+          <option value="🔥">🔥 Flame</option>
+          <option value="❄️">❄️ Snow</option>
+          <option value="🧪">🧪 Test tube</option>
+          <option value="⚠️">⚠️ Warning</option>
+          <option value="🏆">🏆 Trophy</option>
+          <option value="📉">📉 Oops</option>
+          <option value="🧠">🧠 Think</option>
+        </select>
+      </label>
+
+      <label>Button Title
+        <input id="fTitle" placeholder="e.g., Under Pressure" />
+      </label>
+      <label>Artist – Song (display only)
+        <input id="fMeta" placeholder="e.g., Queen & Bowie — Under Pressure" />
+      </label>
+
+      <label>Audio URL (direct file link)
+        <input id="fUrl" placeholder="https://.../clip.mp3" />
+      </label>
+      <label>Start / End (seconds)
+        <div style="display:flex; gap:8px;">
+          <input id="fStart" type="number" step="0.01" value="0" style="width:100%;" />
+          <input id="fEnd" type="number" step="0.01" value="0" style="width:100%;" />
+        </div>
+        <div class="small">End = 0 means “play to file end”.</div>
+      </label>
+    </div>
+
+    <div class="row">
+      <button id="saveBtn">Save (local)</button>
+      <button id="cancelBtn">Cancel</button>
+    </div>
+  </dialog>
+
+  <!-- Copy JSON dialog -->
+  <dialog id="dlgJson">
+    <h2 style="margin:0 0 8px;font-size:16px;">Updated JSON (paste into clips.json)</h2>
+    <div class="small" style="margin-bottom:10px;">
+      Copy everything below and overwrite your hosted <code>clips.json</code>. Then click <b>Reload Shared Clips</b>.
+    </div>
+    <textarea id="jsonOut" spellcheck="false"></textarea>
+    <div class="row">
+      <button id="closeJsonBtn">Close</button>
+    </div>
+  </dialog>
+
+  <audio id="player" preload="auto" crossorigin="anonymous"></audio>
+
+<script>
+(() => {
+  // === CONFIG: where to load shared clips.json from ===
+  // Default: same folder as index.html
+  const SHARED_JSON_URL = new URL("./clips.json", window.location.href).toString();
+
+  const LOCAL_OVERLAY_KEY = "chem_soundboard_overlay_v1";
+
+  const player = document.getElementById("player");
+  const layout = document.getElementById("layout");
+  const statusEl = document.getElementById("status");
+
+  const dlgAdd = document.getElementById("dlgAdd");
+  const dlgJson = document.getElementById("dlgJson");
+  const jsonOut = document.getElementById("jsonOut");
+
+  let audioUnlocked = false;
+
+  // shared model
+  let model = { version:1, updated:"", categories:[], clips:[] };
+
+  // local overlay clips (added locally for testing before updating shared JSON)
+  let overlay = loadOverlay();
+
+  // interaction state per clip id
+  const tapState = new Map(); // id -> { times:[], armed:false, looping:false, holdActive:false }
+  let loopTimer = null;
+  let currentClipId = null;
+
+  function setStatus(msg){ statusEl.textContent = msg; }
+
+  function loadOverlay(){
+    try{
+      const raw = localStorage.getItem(LOCAL_OVERLAY_KEY);
+      if(!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    }catch{ return []; }
+  }
+  function saveOverlay(){
+    localStorage.setItem(LOCAL_OVERLAY_KEY, JSON.stringify(overlay));
+  }
+
+  function ensureState(id){
+    if(!tapState.has(id)) tapState.set(id, { times:[], armed:false, looping:false, holdActive:false });
+    return tapState.get(id);
+  }
+
+  async function loadShared(){
+    setStatus("Loading shared clips.json…");
+    try{
+      const res = await fetch(SHARED_JSON_URL, { cache: "no-store" });
+      if(!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+      validateModel(data);
+      model = data;
+
+      // Populate category options
+      populateCategories();
+
+      setStatus(`Loaded shared clips.json (${model.clips.length} clips). Local overlay: ${overlay.length} clips.`);
+      render();
+    }catch(err){
+      setStatus("Could not load clips.json. Check hosting/URL/CORS. " + String(err));
+      // Still render overlay-only if any
+      if(overlay.length){
+        model.categories = model.categories.length ? model.categories : defaultCategories();
+        model.clips = [];
+        populateCategories();
+        render();
+      }
+    }
+  }
+
+  function defaultCategories(){
+    return [
+      { key:"core", name:"Core / Class Staples", note:"High-frequency teacher hits" },
+      { key:"lab", name:"Lab Chaos / Reaction Energy", note:"Heat, fire, danger, reaction moments" },
+      { key:"correct", name:"Corrections / Reality Checks", note:"Try again, close-but-nope, move on" },
+      { key:"wins", name:"Wins / Celebrations", note:"When someone nails it" },
+      { key:"irony", name:"Chemistry Irony", note:"Pressure, electricity, etc." }
+    ];
+  }
+
+  function validateModel(d){
+    if(!d || typeof d !== "object") throw new Error("Invalid JSON");
+    if(!Array.isArray(d.categories)) throw new Error("categories must be array");
+    if(!Array.isArray(d.clips)) throw new Error("clips must be array");
+  }
+
+  function allClips(){
+    // shared + overlay (overlay wins if duplicate id)
+    const byId = new Map();
+    model.clips.forEach(c => byId.set(c.id, c));
+    overlay.forEach(c => byId.set(c.id, c));
+    return Array.from(byId.values());
+  }
+
+  function render(){
+    layout.innerHTML = "";
+
+    const clips = allClips();
+    const cats = model.categories && model.categories.length ? model.categories : defaultCategories();
+
+    cats.forEach(cat => {
+      const section = document.createElement("div");
+      section.className = "section";
+
+      const list = clips.filter(c => c.cat === cat.key);
+
+      const head = document.createElement("div");
+      head.className = "sectionHead";
+      head.innerHTML = `<div>
+          <div class="sectionTitle">${escapeHtml(cat.name)}</div>
+          <div class="sectionNote">${escapeHtml(cat.note || "")}</div>
+        </div>
+        <div class="sectionNote">${list.length} buttons</div>`;
+      section.appendChild(head);
+
+      const grid = document.createElement("div");
+      grid.className = "grid";
+
+      list.forEach(clip => {
+        const st = ensureState(clip.id);
+
+        const card = document.createElement("div");
+        card.className = "card" + (st.looping ? " looping" : "") + (st.armed ? " armed" : "");
+        card.addEventListener("contextmenu", (e) => e.preventDefault());
+
+        const icon = document.createElement("div");
+        icon.className = "icon";
+        icon.textContent = clip.icon || "🧪";
+
+        const txt = document.createElement("div");
+        txt.className = "txt";
+        txt.innerHTML = `<div class="title">${escapeHtml(clip.title)}</div>
+                         <div class="meta">${escapeHtml(clip.meta || "")}</div>`;
+
+        const badge = document.createElement("div");
+        badge.className = "badge";
+        badge.textContent = st.looping ? "LOOP" : (st.armed ? "ARMED" : "2× PLAY • 3× LOOP");
+
+        card.appendChild(icon);
+        card.appendChild(txt);
+        card.appendChild(badge);
+
+        card.addEventListener("pointerdown", (e) => onDown(e, clip));
+        card.addEventListener("pointerup", (e) => onUp(e, clip));
+        card.addEventListener("pointercancel", (e) => onUp(e, clip));
+
+        grid.appendChild(card);
+      });
+
+      section.appendChild(grid);
+      layout.appendChild(section);
+    });
+  }
+
+  function nowMs(){ return performance.now(); }
+  function recordTap(id){
+    const st = ensureState(id);
+    const t = nowMs();
+    st.times.push(t);
+    st.times = st.times.filter(x => t - x <= 650);
+    return st.times.length;
+  }
+
+  function clearLoop(){
+    if(loopTimer) clearInterval(loopTimer);
+    loopTimer = null;
+    for(const [id, st] of tapState.entries()) st.looping = false;
+  }
+
+  function stopAll(){
+    clearLoop();
+    try{ player.pause(); }catch{}
+    try{ player.currentTime = 0; }catch{}
+    currentClipId = null;
+    for(const [id, st] of tapState.entries()){
+      st.armed = false;
+      st.holdActive = false;
+      st.times = [];
+    }
+    render();
+  }
+
+  async function ensureUnlocked(){
+    if(audioUnlocked) return true;
+    try{
+      player.src = player.src || "data:audio/mp3;base64,";
+      await player.play();
+      player.pause();
+      audioUnlocked = true;
+      return true;
+    }catch{
+      return false;
+    }
+  }
+
+  function loadIfNeeded(clip){
+    if(!clip.url) return false;
+    if(!player.src || player.src !== clip.url) player.src = clip.url;
+    return true;
+  }
+
+  function playClip(clip){
+    if(!loadIfNeeded(clip)) return;
+
+    if(loopTimer){ clearInterval(loopTimer); loopTimer = null; }
+
+    const start = Number(clip.start || 0);
+    const end = Number(clip.end || 0);
+
+    try{ player.currentTime = Math.max(0, start); }catch{}
+    const p = player.play();
+    if(p && p.catch) p.catch(()=>{});
+    currentClipId = clip.id;
+
+    if(end > start){
+      const durMs = (end - start) * 1000;
+      setTimeout(() => {
+        const st = ensureState(clip.id);
+        if(!st.looping && currentClipId === clip.id && !st.holdActive){
+          try{ player.pause(); }catch{}
+        }
+      }, durMs);
+    }
+  }
+
+  function startLoop(clip){
+    if(!loadIfNeeded(clip)) return;
+
+    const start = Number(clip.start || 0);
+    const end = Number(clip.end || 0);
+    const loopEnd = (end > start) ? end : null;
+
+    try{ player.currentTime = Math.max(0, start); }catch{}
+    const p = player.play();
+    if(p && p.catch) p.catch(()=>{});
+    currentClipId = clip.id;
+
+    loopTimer = setInterval(() => {
+      const st = ensureState(clip.id);
+      if(!st.looping){ clearInterval(loopTimer); loopTimer = null; return; }
+      if(loopEnd !== null && player.currentTime >= loopEnd){
+        try{ player.currentTime = Math.max(0, start); }catch{}
+        const p2 = player.play();
+        if(p2 && p2.catch) p2.catch(()=>{});
+      }
+    }, 40);
+
+    player.onended = () => {
+      const st = ensureState(clip.id);
+      if(st.looping && loopEnd === null){
+        try{ player.currentTime = Math.max(0, start); }catch{}
+        const p3 = player.play();
+        if(p3 && p3.catch) p3.catch(()=>{});
+      }
+    };
+  }
+
+  function onDown(e, clip){
+    const st = ensureState(clip.id);
+
+    // If looping, single press stops
+    if(st.looping){
+      st.looping = false;
+      if(loopTimer){ clearInterval(loopTimer); loopTimer = null; }
+      try{ player.pause(); }catch{}
+      render();
+      return;
+    }
+
+    const n = recordTap(clip.id);
+
+    if(n === 1){
+      st.armed = true;
+      render();
+      return;
+    }
+
+    if(n === 2){
+      st.armed = false;
+      st.holdActive = true;
+      ensureUnlocked().then(ok => { if(ok) playClip(clip); });
+      render();
+      return;
+    }
+
+    if(n >= 3){
+      // only one looping at a time
+      for(const [id, s] of tapState.entries()) s.looping = false;
+      st.armed = false;
+      st.holdActive = false;
+      st.looping = true;
+      ensureUnlocked().then(ok => { if(ok) startLoop(clip); });
+      render();
+      return;
+    }
+  }
+
+  function onUp(e, clip){
+    const st = ensureState(clip.id);
+    if(st.holdActive){
+      st.holdActive = false;
+      setTimeout(() => {
+        const s2 = ensureState(clip.id);
+        if(!s2.looping){
+          try{ player.pause(); }catch{}
+        }
+      }, 30);
+      render();
+    }
+  }
+
+  // ===== Add button flow (local overlay) =====
+  const fCat = document.getElementById("fCat");
+  const fIcon = document.getElementById("fIcon");
+  const fTitle = document.getElementById("fTitle");
+  const fMeta = document.getElementById("fMeta");
+  const fUrl = document.getElementById("fUrl");
+  const fStart = document.getElementById("fStart");
+  const fEnd = document.getElementById("fEnd");
+
+  function populateCategories(){
+    fCat.innerHTML = "";
+    const cats = model.categories && model.categories.length ? model.categories : defaultCategories();
+    cats.forEach(c => {
+      const opt = document.createElement("option");
+      opt.value = c.key;
+      opt.textContent = c.name;
+      fCat.appendChild(opt);
+    });
+    fCat.value = cats[0]?.key || "core";
+  }
+
+  document.getElementById("addBtn").addEventListener("click", () => {
+    fCat.value = (model.categories?.[0]?.key) || "core";
+    fIcon.value = "⚗️";
+    fTitle.value = "";
+    fMeta.value = "";
+    fUrl.value = "";
+    fStart.value = "0";
+    fEnd.value = "0";
+    dlgAdd.showModal();
+  });
+  document.getElementById("cancelBtn").addEventListener("click", () => dlgAdd.close());
+  document.getElementById("saveBtn").addEventListener("click", () => {
+    const cat = (fCat.value || "core").trim();
+    const icon = (fIcon.value || "🧪").trim();
+    const title = (fTitle.value || "").trim();
+    const meta = (fMeta.value || "").trim();
+    const url = (fUrl.value || "").trim();
+    const start = Number(fStart.value || 0);
+    const end = Number(fEnd.value || 0);
+
+    if(!title){ alert("Please enter a Button Title."); return; }
+    if(url && !url.startsWith("https://")){ alert("Audio URL must be a direct https:// link (or leave blank for now)."); return; }
+
+    const id = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 40) + "-" + Math.floor(Math.random()*10000);
+    overlay.push({ id, cat, icon, title, meta, url, start, end });
+    saveOverlay();
+    dlgAdd.close();
+    setStatus(`Saved locally. Overlay now has ${overlay.length} clips. Click "Copy Updated JSON" to make it shared.`);
+    render();
+  });
+
+  // ===== Copy updated JSON =====
+  document.getElementById("copyBtn").addEventListener("click", async () => {
+    const merged = {
+      version: model.version || 1,
+      updated: new Date().toISOString().slice(0,10),
+      categories: model.categories && model.categories.length ? model.categories : defaultCategories(),
+      clips: mergeForExport()
+    };
+    jsonOut.value = JSON.stringify(merged, null, 2);
+    dlgJson.showModal();
+
+    // Try clipboard copy
+    try{
+      await navigator.clipboard.writeText(jsonOut.value);
+      setStatus("Updated JSON copied to clipboard ✅ Paste into clips.json and commit.");
+    }catch{
+      setStatus("Updated JSON ready. Select all + copy manually if needed.");
+    }
+  });
+  document.getElementById("closeJsonBtn").addEventListener("click", () => dlgJson.close());
+
+  function mergeForExport(){
+    const byId = new Map();
+    (model.clips || []).forEach(c => byId.set(c.id, c));
+    overlay.forEach(c => byId.set(c.id, c));
+    return Array.from(byId.values());
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, ch => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
+    }[ch]));
+  }
+
+  // ===== Toolbar =====
+  document.getElementById("stopBtn").addEventListener("click", stopAll);
+  document.getElementById("reloadBtn").addEventListener("click", loadShared);
+  document.getElementById("unlockBtn").addEventListener("click", async () => {
+    const ok = await ensureUnlocked();
+    alert(ok ? "Audio unlocked ✅" : "Still blocked. Tap a sound button once, then try again.");
+  });
+
+  // boot
+  loadShared();
+})();
+</script>
+</body>
+</html>
